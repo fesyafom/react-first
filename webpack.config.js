@@ -1,24 +1,38 @@
-var	path = require('path');
+'use strict';
+
 var	webpack	= require('webpack');
+var	path = require('path');
+
 module.exports = {
-    devtool: 'cheap-module-eval-source-map',
+    devtool: null,            
+
+    context: __dirname,
     entry: [
-        'webpack-hot-middleware/client',
         'babel-polyfill',
         './app/index'
     ],
-    output:	{
-        path: path.join(__dirname, 'dist'),
-        filename: 'bundle.js',
-        publicPath: '/static/'
+    output: {
+        path: './static',
+        filename: 'bundle.js'
     },
+
     plugins: [
         new	webpack.optimize.OccurenceOrderPlugin(),
-        new	webpack.HotModuleReplacementPlugin(),
         new	webpack.NoErrorsPlugin()
     ],
-    module:	{	
-        loaders: [	
+
+    resolve: {                                  
+        moduleDirectories: ['node_modules'],
+        extensions: ['','.js']
+    },
+
+    resolveLoader: {                           
+        moduleDirectories: ['node_modules'],
+        extensions: ['','.js']
+    },
+
+    module:	{
+        loaders: [
             {
                 loaders: ['babel-loader'],
                 include: [
@@ -28,5 +42,10 @@ module.exports = {
                 plugins: ['transform-runtime']
             }
         ]
+    },
+    watch: true,                
+
+    watchOptions: {
+        aggregateTimeout: 100   
     }
 };

@@ -5,12 +5,12 @@ import Home from './components/Home'
 import Community from './components/Community'
 import NotFound	from './components/NotFound'
 
-export const routes = (
-    <div>
-        <Route path='/' component={App}>
+export default (
+    <Route component={App}>
+        <Route path='/'>
             <IndexRoute component={Home}/>
             <Route path=':community' component={Community}/>
         </Route>
         <Route	path='*' component={NotFound}/>
-    </div>
+    </Route>
 );
