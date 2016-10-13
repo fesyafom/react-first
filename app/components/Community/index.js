@@ -3,7 +3,9 @@ import {bindActionCreators} from 'redux'
 import {connect} from 'react-redux'
 import * as pageActions from '../../actions/CommunityActions'
 
-class Community extends Component {
+@connect(state => ({ page: state.page }), dispatch => ({pageActions: bindActionCreators(pageActions, dispatch)}))
+
+export default class Community extends Component {
     componentDidMount()	{
         this.props.pageActions.getEvents('http://api.itboost.org:88/app_dev.php/api/event' + this.props.location.pathname);
     }
@@ -31,19 +33,7 @@ class Community extends Component {
     }
 }
 
-function mapStateToProps	(state)	{
-    return {
-        page: state.page
-    }
-}
 
-function mapDispatchToProps(dispatch) {
-    return {
-        pageActions: bindActionCreators(pageActions, dispatch)
-    }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Community)
 
 
 

@@ -4,8 +4,9 @@ import { connect } from	'react-redux'
 import * as pageActions from '../../actions/HomeActions'
 import Item from './Item'
 
+@connect(state => ({ main: state.main }), dispatch => ({pageActions: bindActionCreators(pageActions, dispatch)}))
 
-class Home extends Component {
+export default class Home extends Component {
     componentDidMount()	{
         this.props.pageActions.getEvents('http://api.itboost.org:88/app_dev.php/api/event.getPopular');
     }
@@ -31,17 +32,3 @@ class Home extends Component {
         )
     }
 }
-
-function mapStateToProps	(state)	{
-    return	{
-        main: state.main
-    }
-}
-
-function mapDispatchToProps(dispatch) {
-    return {
-        pageActions: bindActionCreators(pageActions, dispatch)
-    }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Home)
