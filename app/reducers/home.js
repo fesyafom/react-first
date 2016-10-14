@@ -4,7 +4,8 @@ import {
 }    from '../constants/HomePage'
 
 const initialState = {
-    data: {}
+    data: {},
+    loaded: false
 };
 
 export default function main(state = initialState, action) {
@@ -12,7 +13,7 @@ export default function main(state = initialState, action) {
         case    GET_EVENTS_REQUEST:
             return {...state};
         case    GET_EVENTS_SUCCESS:
-            return {...state, data: action.payload};
+            return {...state, data: action.payload, loaded: true};
         default:
             return state;
     }

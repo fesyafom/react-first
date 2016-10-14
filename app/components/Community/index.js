@@ -2,14 +2,19 @@ import React, {Component} from 'react'
 import {bindActionCreators} from 'redux'
 import {connect} from 'react-redux'
 import * as pageActions from '../../actions/CommunityActions'
+import { asyncConnect } from 'redux-connect'
+
+@asyncConnect([{
+    promise: ({ params, store: { dispatch, getState } }) => {
+        let events = pageActions.getEvents('http://api.itboost.org:88/app_dev.php/api/event/' + params.community);
+        dispatch(events);
+        return events.promise;
+    }
+}])
 
 @connect(state => ({ page: state.page }), dispatch => ({pageActions: bindActionCreators(pageActions, dispatch)}))
 
 export default class Community extends Component {
-    componentDidMount()	{
-        this.props.pageActions.getEvents('http://api.itboost.org:88/app_dev.php/api/event' + this.props.location.pathname);
-    }
-
     render() {
         var	newsTemplate;
         if (this.props.page.loaded === true) {

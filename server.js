@@ -5,8 +5,10 @@ import React from 'react'
 import { Provider } from 'react-redux'
 import { renderToString } from 'react-dom/server'
 import configureStore from './app/store/configureStore'
-import { RouterContext, match } from 'react-router'
+import { match } from 'react-router'
 import routes from './app/routes';
+import serialize from 'serialize-javascript';
+import { ReduxAsyncConnect, loadOnServer } from 'redux-connect'
 
 
 
@@ -15,46 +17,40 @@ const port = 3000;
 
 app.use('/static', Express.static('static'));
 
-app.use((req, res) => {
+app.get('*', (req, res) => {
     const store = configureStore();
 
-    match({ routes, location: req.url }, (err, redirectLocation, renderProps) => {
-        if (err) {
-            console.error(err);
-            return res.status(500).end('Internal server error');
-        }
-
-        if (!renderProps) return res.status(404).end('Not found.');
-
-        const InitialComponent = (
-            <Provider store={store}>
-                <RouterContext {...renderProps} />
-            </Provider>
-        );
-
-        const initialState = store.getState();
-
-        const componentHTML = renderToString(InitialComponent);
-
-        const HTML = `
-            <!DOCTYPE html>
-            <html>
-            <head>
-                <meta charset="utf-8">
-                <title>Test</title>
-            </head>
-            <body>
-                <div id="root">${componentHTML}</div>
-                    <script type="application/javascript">
-                    window.__INITIAL_STATE__ = ${JSON.stringify(initialState)};
-                </script>
-                <script src="/static/bundle.js"></script>
-            </body>
-            </html>    
-           `;
-        res.end(HTML);
-    });
+    match({ routes, location: req.url }, (err, redirect, renderProps) => {
+        loadOnServer({ ...renderProps, store }).then(() => {
+            const appHTML = renderToString(
+                <Provider store={store} key="provider">
+                    <ReduxAsyncConnect {...renderProps} />
+                </Provider>
+            );
+            const html = createPage(appHTML, store);
+            res.send(html)
+        })
+    })
 });
+
+function createPage(html, store) {
+    return `
+    <!doctype html>
+    <html>
+        <head>
+                <meta charset="utf-8">
+                <title>My test</title>
+                <link rel="stylesheet" href="/static/styles.css">
+            </head>
+      <body>
+        <div id="root">${html}</div>
+   
+        <script> window.__data=${serialize(store.getState())}</script>
+        <script src="/static/bundle.js"></script>
+      </body>
+    </html>
+  `
+}
 
 
 app.listen(port, function (error) {
