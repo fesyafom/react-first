@@ -17,7 +17,7 @@ const port = 3000;
 
 app.use('/static', Express.static('static'));
 
-app.get('*', (req, res) => {
+app.use((req, res) => {
     const store = configureStore();
 
     match({ routes, location: req.url }, (err, redirect, renderProps) => {
