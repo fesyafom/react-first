@@ -4,11 +4,8 @@ Isomorphic Application on Redux
 INSTALL
 ------------------------------------------------------------------------
 1. `npm install` for create npm dependencies
-
-BUILD PROJECT
-------------------------------------------------------------------------
-1. `webpack` to build project. As a result, the file bundle.js will be created in public directory.
-Webpack must be installed globally.
+2. `webpack` to build project. As a result, the file bundle.js will be created in "public" directory.
+   Webpack must be installed globally.
 
 RUN PROJECT
 ------------------------------------------------------------------------
