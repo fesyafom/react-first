@@ -13,7 +13,7 @@ import { ReduxAsyncConnect, loadOnServer } from 'redux-connect'
 
 
 const app = Express();
-const port = 3000;
+const port = 6001;
 
 app.use('/static', Express.static('static'));
 
@@ -39,7 +39,8 @@ function createPage(html, store) {
     <html>
         <head>
                 <meta charset="utf-8">
-                <title>My test</title>
+                <link rel="shortcut icon" href="/static/logo.png">
+                <title>Redux test</title>
                 <link rel="stylesheet" href="/static/styles.css">
             </head>
       <body>
